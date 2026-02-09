@@ -79,7 +79,7 @@ class MeterAirController extends Controller
             'stand_kini' => $request->stand_kini,
             'pemakaian' => $pemakaian,
             'tagihan_bulan_lalu' => $request->tagihan_bulan_lalu ?? 0,
-            'total_bayar' => $totalBayar,
+            // 'total_bayar' => $totalBayar,
         ]);
 
         return redirect()->route('air.index')
@@ -166,7 +166,7 @@ class MeterAirController extends Controller
             'stand_kini' => $request->stand_kini,
             'pemakaian' => $pemakaian,
             'tagihan_bulan_lalu' => $request->tagihan_bulan_lalu,
-            'total_bayar' => $totalBayar
+            // 'total_bayar' => $totalBayar
         ]);
 
         return redirect()->route('air.index')
