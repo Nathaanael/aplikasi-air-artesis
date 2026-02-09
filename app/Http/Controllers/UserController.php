@@ -21,20 +21,12 @@ class UserController extends Controller
         $r->validate([
             'username' => 'required|unique:users',
             'password' => 'required|min:4',
-            'nama' => 'required',
-            'rt' => 'required',
-            'rw' => 'required',
-            'alamat' => 'required'
         ]);
 
         User::create([
             'username' => $r->username,
             'password' => Hash::make($r->password),
             'role' => 'warga',
-            'nama' => $r->nama,
-            'rt' => $r->rt,
-            'rw' => $r->rw,
-            'alamat' => $r->alamat,
         ]);
 
         return redirect()->route('users.index')->with('success','User berhasil dibuat');
@@ -43,7 +35,7 @@ class UserController extends Controller
     // Tampilkan daftar user warga
     public function index()
     {
-        $users = User::where('role','warga')->orderBy('username')->get();
+        $users = User::where('role','warga')->with('warga')->orderBy('username')->get();
         return view('users.index', compact('users'));
     }
 
@@ -59,19 +51,11 @@ class UserController extends Controller
         $r->validate([
             'username' => 'required|unique:users,username,'.$user->id,
             'password' => 'nullable',
-            'nama' => 'required',
-            'rt' => 'required',
-            'rw' => 'required',
-            'alamat' => 'required'
         ]);
 
         $user->update([
             'username' => $r->username,
             'password' => $r->password ? Hash::make($r->password) : $user->password,
-            'nama' => $r->nama,
-            'rt' => $r->rt,
-            'rw' => $r->rw,
-            'alamat' => $r->alamat,
         ]);
 
         return redirect()->route('users.index')->with('success','User berhasil diupdate');

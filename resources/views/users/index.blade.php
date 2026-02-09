@@ -47,9 +47,9 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $user->username }}</td>
-                            <td>{{ $user->nama }}</td>
-                            <td>{{ $user->rt }}/{{ $user->rw }}</td>
-                            <td>{{ $user->alamat }}</td>
+                            <td>{{ $user->warga->nama }}</td>
+                            <td>{{ $user->warga->rt }}/{{ $user->warga->rw }}</td>
+                            <td>{{ $user->warga->alamat }}</td>
                             <td>
                                 <!-- Tombol Edit -->
                                 <button type="button" class="btn btn-sm btn-warning"

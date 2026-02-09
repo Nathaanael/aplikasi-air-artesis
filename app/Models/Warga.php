@@ -8,9 +8,11 @@ class Warga extends Model
 {
     protected $fillable = [
         'user_id',
-        'nama',
-        'alamat_rtrw',
         'nomor_pelanggan',
+        'nama',
+        'rt',
+        'rw',
+        'alamat',
     ];
 
     public function user()

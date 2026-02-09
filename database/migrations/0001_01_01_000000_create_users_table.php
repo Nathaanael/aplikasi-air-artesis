@@ -21,7 +21,6 @@ return new class extends Migration
             // role akses
             $table->enum('role', ['admin', 'warga']);
 
-            $table->rememberToken();
             $table->timestamps();
         });
 

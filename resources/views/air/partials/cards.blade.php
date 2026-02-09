@@ -75,7 +75,7 @@
                 <tr class="fw-bold">
                     <td colspan="3">Jumlah yang dibayar</td>
                     <td class="text-end">
-                        Rp {{ number_format($row->total_bayar, 0, ',', '.') }}
+                        Rp {{ number_format($total, 0, ',', '.') }}
                     </td>
                 </tr>
             </tfoot>

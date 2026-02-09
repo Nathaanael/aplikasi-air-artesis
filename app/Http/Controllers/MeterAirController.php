@@ -78,11 +78,11 @@ class MeterAirController extends Controller
             'stand_kini' => $request->stand_kini,
             'pemakaian' => $pemakaian,
             'tagihan_bulan_lalu' => $request->tagihan_bulan_lalu ?? 0,
-            'total_bayar' => $totalBayar,
         ]);
 
         return redirect()->route('air.index')
-            ->with('success', '✅ Data meter berhasil disimpan');
+            ->with('success', '✅ Data meter berhasil disimpan')
+            ->with('total', $totalBayar);
     }
 
 
@@ -165,7 +165,6 @@ class MeterAirController extends Controller
             'stand_kini' => $request->stand_kini,
             'pemakaian' => $pemakaian,
             'tagihan_bulan_lalu' => $request->tagihan_bulan_lalu,
-            'total_bayar' => $totalBayar
         ]);
 
         return redirect()->route('air.index')

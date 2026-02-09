@@ -16,7 +16,6 @@ class MeterAir extends Model
         'stand_kini',
         'pemakaian',
         'tagihan_bulan_lalu',
-        'total_bayar',
     ];
 
     public function user()

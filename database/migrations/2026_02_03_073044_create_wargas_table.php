@@ -18,9 +18,11 @@ return new class extends Migration
                 ->constrained('users')
                 ->cascadeOnDelete();
 
-            $table->string('nama');
-            $table->string('alamat_rtrw');
             $table->string('nomor_pelanggan')->unique();
+            $table->string('nama');
+            $table->string('rt')->nullable();
+            $table->string('rw')->nullable();
+            $table->string('alamat')->nullable();
 
             $table->timestamps();
         });
