@@ -64,7 +64,7 @@ class MeterAirExportController extends Controller
 
         $sheet->setCellValue("A$row", $no++);
         $sheet->setCellValue("B$row", $meter->user->username);
-        $sheet->setCellValue("C$row", $meter->user->alamat ?? '-');
+        $sheet->setCellValue("C$row", $meter->user->warga->alamat ?? '-');
         $sheet->setCellValue("D$row", $bulan);
         $sheet->setCellValue("E$row", $tahun);
         $sheet->setCellValue("F$row", $meter->pemakaian);

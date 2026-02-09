@@ -84,7 +84,7 @@ $chunks = $meters->chunk(8); // 8 nota per halaman
 
 <table class="small">
 <tr><td>Nama</td><td>: {{ $meter->user->username }}</td></tr>
-<tr><td>Alamat</td><td>: {{ $meter->user->alamat }}</td></tr>
+<tr><td>Alamat</td><td>: {{ $meter->user->warga->alamat ?? '-' }}</td></tr>
 <tr><td>No</td><td>: {{ str_pad($meter->user->id,3,'0',STR_PAD_LEFT) }}</td></tr>
 <tr>
 <td>Periode</td>

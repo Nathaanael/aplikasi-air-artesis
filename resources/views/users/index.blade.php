@@ -47,9 +47,9 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ $user->username }}</td>
-                            <td>{{ $user->nama }}</td>
-                            <td>{{ $user->rt }}/{{ $user->rw }}</td>
-                            <td>{{ $user->alamat }}</td>
+                            <td>{{ $user->warga->nama ?? '-' }}</td>
+                            <td>{{ $user->warga->rt ?? '-' }}/{{ $user->warga->rw ?? '-' }}</td>
+                            <td>{{ $user->warga->alamat ?? '-' }}</td>
                             <td>
                                 <!-- Tombol Edit -->
                                 <button type="button" class="btn btn-sm btn-warning"
@@ -57,11 +57,11 @@
                                         data-bs-target="#editModal"
                                         data-id="{{ $user->id }}"
                                         data-username="{{ $user->username }}"
-                                        data-nama="{{ $user->nama }}"
-                                        data-rt="{{ $user->rt }}"
-                                        data-rw="{{ $user->rw }}"
-                                        data-alamat="{{ $user->alamat }}">
-                                    Edit
+                                        data-nama="{{ $user->warga->nama ?? '' }}"
+                                        data-rt="{{ $user->warga->rt ?? '' }}"
+                                        data-rw="{{ $user->warga->rw ?? '' }}"
+                                        data-alamat="{{ $user->warga->alamat ?? '' }}">
+                                        Edit
                                 </button>
                                 <button class="btn btn-sm btn-info"
                                         data-bs-toggle="modal"

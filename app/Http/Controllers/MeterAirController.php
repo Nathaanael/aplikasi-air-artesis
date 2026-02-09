@@ -17,7 +17,8 @@ class MeterAirController extends Controller
         $bulan = $request->bulan ?? date('n');
         $tahun = $request->tahun ?? date('Y');
 
-        $users = User::where('role', 'warga')->orderBy('username')->get();
+        $users = User::where('role', 'warga')->orderBy('username')->with('warga')->get();
+
 
         return view('air.create', compact('users','bulan','tahun'));
     }

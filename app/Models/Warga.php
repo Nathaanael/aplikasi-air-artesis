@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Warga extends Model
 {
+    protected $table = 'warga';
     protected $fillable = [
         'user_id',
         'nama',
-        'alamat_rtrw',
+        'alamat',
+        'rt',
+        'rw',
         'nomor_pelanggan',
     ];
 
@@ -18,3 +21,4 @@ class Warga extends Model
         return $this->belongsTo(User::class);
     }
 }
+
