@@ -69,11 +69,11 @@
                     <label class="form-label">Warga</label>
                     <select id="userSelect" name="user_id" class="form-select">
                         @foreach($users as $u)
-                        <option value="{{ $u->id }}"
-                                data-rt="{{ $u->rt }}"
-                                data-rw="{{ $u->rw }}">
-                            {{ $u->nama }}
-                        </option>
+                            <option value="{{ $u->id }}"
+                                    data-rt="{{ $u->warga->rt ?? '' }}"
+                                    data-rw="{{ $u->warga->rw ?? '' }}">
+                                {{ $u->warga->nama ?? '' }}
+                            </option>
                         @endforeach
                     </select>
 

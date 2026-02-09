@@ -16,12 +16,12 @@
             <tr>
                 <td>ALAMAT</td>
                 <td>:</td>
-                <td>{{ $row->user->alamat ?? '-' }}</td>
+                <td>{{ $row->user->warga->alamat ?? '-' }}</td>
             </tr>
             <tr>
                 <td>No. PELANGGAN</td>
                 <td>:</td>
-                <td>{{ str_pad($row->user->id, 3, '0', STR_PAD_LEFT) }}</td>
+                <td>{{ $row->user->warga->nomor_pelanggan ?? '-' }}</td>
             </tr>
             <tr>
                 <td>REKENING BULAN</td>

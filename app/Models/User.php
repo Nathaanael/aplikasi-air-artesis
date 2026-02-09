@@ -19,10 +19,6 @@ class User extends Authenticatable
         'username',
         'password',
         'role',
-        'nama',
-        'rt',
-        'rw',
-        'alamat',
     ];
 
 

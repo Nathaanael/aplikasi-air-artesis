@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\Warga;
 
 class UserController extends Controller
 {
@@ -27,15 +28,24 @@ class UserController extends Controller
             'alamat' => 'required'
         ]);
 
-        User::create([
+        $user = User::create([
             'username' => $r->username,
             'password' => Hash::make($r->password),
             'role' => 'warga',
+        ]);
+        $last = Warga::orderBy('id', 'desc')->first();
+        $lastNumber = $last ? (int)$last->nomor_pelanggan : 0;
+        $nomorPelanggan = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+
+        Warga::create([
+            'user_id' => $user->id,
             'nama' => $r->nama,
             'rt' => $r->rt,
             'rw' => $r->rw,
             'alamat' => $r->alamat,
+            'nomor_pelanggan' => $nomorPelanggan,
         ]);
+
 
         return redirect()->route('users.index')->with('success','User berhasil dibuat');
     }
@@ -43,7 +53,7 @@ class UserController extends Controller
     // Tampilkan daftar user warga
     public function index()
     {
-        $users = User::where('role','warga')->orderBy('username')->get();
+        $users = User::where('role', 'warga')->with('warga')->orderBy('username')->get();
         return view('users.index', compact('users'));
     }
 
@@ -68,6 +78,10 @@ class UserController extends Controller
         $user->update([
             'username' => $r->username,
             'password' => $r->password ? Hash::make($r->password) : $user->password,
+        ]);
+
+        // Update data warga
+        $user->warga()->update([
             'nama' => $r->nama,
             'rt' => $r->rt,
             'rw' => $r->rw,
