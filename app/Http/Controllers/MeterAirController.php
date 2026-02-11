@@ -66,10 +66,10 @@ class MeterAirController extends Controller
             ]);
         }
 
-        $totalBayar =
-            self::ABONEMEN +
-            ($pemakaian * self::TARIF_PER_M3) -
-            ($request->tagihan_bulan_lalu ?? 0);
+        // $totalBayar =
+        //     self::ABONEMEN +
+        //     ($pemakaian * self::TARIF_PER_M3) -
+        //     ($request->tagihan_bulan_lalu ?? 0);
 
         MeterAir::create([
             'user_id' => $request->user_id,
@@ -101,7 +101,9 @@ class MeterAirController extends Controller
         if ($search) {
             $query->whereHas('user', function ($q) use ($search) {
                 $q->where('username', 'like', "%$search%")
-                ->orWhere('nama', 'like', "%$search%");
+                ->orWhereHas('warga', function ($w) use ($search) {
+                    $w->where('nama', 'like', "%$search%");
+                });
             });
         }
 
@@ -109,7 +111,6 @@ class MeterAirController extends Controller
                     ->paginate(5)
                     ->withQueryString();
 
-        // 👉 jika ajax → return partial saja
         if ($request->ajax()) {
             return view('air.partials.cards', compact('data'))->render();
         }
@@ -127,6 +128,10 @@ class MeterAirController extends Controller
             ->where('bulan', $bulan)
             ->where('tahun', $tahun)
             ->paginate(5);
+
+        if ($request->ajax()) {
+            return view('warga.partials.cards', compact('data'))->render();
+        }
 
         return view('warga.index', compact('data','bulan','tahun'));
     }
@@ -155,10 +160,10 @@ class MeterAirController extends Controller
             ]);
         }
 
-        $totalBayar =
-            self::ABONEMEN +
-            ($pemakaian * self::TARIF_PER_M3) -
-            ($request->tagihan_bulan_lalu ?? 0);
+        // $totalBayar =
+        //     self::ABONEMEN +
+        //     ($pemakaian * self::TARIF_PER_M3) -
+        //     ($request->tagihan_bulan_lalu ?? 0);
 
         $meter->update([
             'bulan' => $request->bulan,

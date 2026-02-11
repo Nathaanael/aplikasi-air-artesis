@@ -51,11 +51,32 @@ class UserController extends Controller
     }
 
     // Tampilkan daftar user warga
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('role', 'warga')->with('warga')->orderBy('username')->get();
-        return view('users.index', compact('users'));
+        $q = $request->q;
+
+        $users = User::where('role', 'warga')
+            ->where('role', 'warga')
+                ->where(function ($query) use ($q) {
+                    $query->where('username', 'like', "%$q%")
+                        ->orWhereHas('warga', function ($w) use ($q) {
+                            $w->where('nama', 'like', "%$q%")
+                                ->orWhere('alamat', 'like', "%$q%");
+                        });
+                })
+
+            ->orderBy('username')
+            ->paginate(10)
+            ->withQueryString();
+
+        // 👉 kalau AJAX → hanya render tabel
+        if ($request->ajax()) {
+            return view('users.partials.table', compact('users'))->render();
+        }
+
+        return view('users.index', compact('users', 'q'));
     }
+
 
     // Tampilkan form edit user
     public function edit(User $user)

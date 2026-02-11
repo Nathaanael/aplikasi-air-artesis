@@ -6,7 +6,6 @@
             <h6 class="fw-bold mb-0">AIR BERSIH TIRTA DARUSSALAM</h6>
             <small>Pongangan Gunungpati</small>
         </div>
-
         <table class="table table-sm table-borderless mb-2">
             <tr>
                 <td width="35%">NAMA PELANGGAN</td>
@@ -16,7 +15,7 @@
             <tr>
                 <td>ALAMAT</td>
                 <td>:</td>
-                <td>{{ $row->user->warga->alamat ?? '-' }}</td>
+                <td>{{ $row->user->warga->formatted_rt_rw ?? '-' }}</td>
             </tr>
             <tr>
                 <td>No. PELANGGAN</td>

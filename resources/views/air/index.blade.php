@@ -7,12 +7,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
+    
+<main class="flex-fill">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ session('success') }}
+            <button class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
 <div class="container py-3">
 
-   <div class="d-flex justify-content-between mb-3 align-items-center">
-    <h5>Data Meter Air</h5>
+    <div class="d-flex justify-content-between mb-3 align-items-center">
+    <h5 class="mb-0">
+            Daftar Meter Air —
+            <span class="text-primary">
+                {{ auth()->user()->username }}
+            </span>
+        </h5>
 
     <div class="d-flex gap-2">
         <a href="{{ route('air.create') }}" class="btn btn-sm btn-primary">
@@ -53,7 +66,7 @@
 
         <div class="col-6">
             <select id="tahun" class="form-select">
-                @foreach(range(date('Y')-3, date('Y')+1) as $y)
+                @foreach(range(date('Y')-1, date('Y')+1) as $y)
                     <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>
                         {{ $y }}
                     </option>
@@ -95,9 +108,9 @@
 </div>
 
 @include('modal.air.edit')
-
-
 </div>
+</main>
+@include('partials.footer')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>

@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-light">
+<body class="bg-light d-flex flex-column min-vh-100">
 
+<main class="flex-fill">
 <div class="container py-3" style="max-width:900px">
 
     <!-- HEADER -->
@@ -29,66 +30,16 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
     <!-- TABEL USER -->
-    <div class="card shadow-sm">
-        <div class="card-body p-0">
-            <table class="table table-striped mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Username</th>
-                        <th>Nama</th>
-                        <th>RT/RW</th>
-                        <th>Alamat</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($users as $index => $user)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $user->username }}</td>
-                            <td>{{ $user->warga->nama ?? '-' }}</td>
-                            <td>{{ $user->warga->rt ?? '-' }}/{{ $user->warga->rw ?? '-' }}</td>
-                            <td>{{ $user->warga->alamat ?? '-' }}</td>
-                            <td>
-                                <!-- Tombol Edit -->
-                                <button type="button" class="btn btn-sm btn-warning"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#editModal"
-                                        data-id="{{ $user->id }}"
-                                        data-username="{{ $user->username }}"
-                                        data-nama="{{ $user->warga->nama ?? '' }}"
-                                        data-rt="{{ $user->warga->rt ?? '' }}"
-                                        data-rw="{{ $user->warga->rw ?? '' }}"
-                                        data-alamat="{{ $user->warga->alamat ?? '' }}">
-                                        Edit
-                                </button>
-                                <button class="btn btn-sm btn-info"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#resetModal"
-                                        data-id="{{ $user->id }}"
-                                        data-username="{{ $user->username }}">
-                                    Reset Password
-                                </button>
-
-                                <!-- Tombol Hapus -->
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline"
-                                      onsubmit="return confirm('Yakin ingin menghapus user ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">Belum ada data warga.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+    <div class="mb-3">
+        <input type="text"
+            id="liveSearch"
+            class="form-control"
+            placeholder="Ketik untuk mencari username / nama / alamat...">
     </div>
+    <div id="userTable">
+        @include('users.partials.table')
+    </div>
+
     @include('modal.users.edit')
     @include('modal.users.add')
     @include('modal.users.reset')
@@ -100,6 +51,7 @@
 
 <!-- JS UNTUK MEMASUKKAN DATA KE MODAL -->
 <script>
+    let timer = null;
     const resetModal = document.getElementById('resetModal');
     const editModal = document.getElementById('editModal');
     editModal.addEventListener('show.bs.modal', function (event) {
@@ -132,6 +84,38 @@
         const form = document.getElementById('resetForm');
         form.action = `/users/${id}/reset-password`;
     });
+    document.getElementById('liveSearch').addEventListener('keyup', function () {
+        clearTimeout(timer);
+
+        const q = this.value;
+
+        timer = setTimeout(() => {
+            fetch(`/users?q=${encodeURIComponent(q)}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('userTable').innerHTML = html;
+            });
+        }, 400); // debounce 400ms
+    });
+    document.addEventListener('click', function(e) {
+    if (e.target.closest('#userTable .pagination a')) {
+        e.preventDefault();
+
+        fetch(e.target.href, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('userTable').innerHTML = html;
+        });
+    }
+});
 </script>
 @if($errors->has('password'))
     <script>
@@ -141,6 +125,7 @@
     });
     </script>
 @endif
-
+</main>
+@include('partials.footer')
 </body>
 </html>
