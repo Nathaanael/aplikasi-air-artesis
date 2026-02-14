@@ -22,7 +22,7 @@ class MeterAirExportController extends Controller
     $bulan = (int) $request->bulan;
     $tahun = (int) $request->tahun;
 
-    $data = MeterAir::with('user')
+    $data = MeterAir::with('user.warga')
         ->where('bulan', $bulan)
         ->where('tahun', $tahun)
         ->orderBy('user_id')
@@ -37,15 +37,17 @@ class MeterAirExportController extends Controller
 
     $headers = [
         'A1' => 'No',
-        'B1' => 'Nama Pelanggan',
-        'C1' => 'Alamat',
-        'D1' => 'Bulan',
-        'E1' => 'Tahun',
-        'F1' => 'Pemakaian (M³)',
-        'G1' => 'Abonemen',
-        'H1' => 'Tarif / M³',
-        'I1' => 'Tagihan Bulan Lalu',
-        'J1' => 'Total Bayar',
+        'B1' => 'Nomor Pelanggan',
+        'C1' => 'Nama Pelanggan',
+        'D1' => 'Alamat',
+        'E1' => 'Bulan',
+        'F1' => 'Tahun',
+        'G1' => 'Pemakaian (M³)',
+        'H1' => 'Abonemen',
+        'I1' => 'Tarif / M³',
+        'J1' => 'Tagihan Bulan Lalu',
+        'K1' => 'Total Bayar',
+        'L1' => 'Status',
     ];
 
     foreach ($headers as $cell => $text) {
@@ -59,24 +61,30 @@ class MeterAirExportController extends Controller
     $no = 1;
 
     foreach ($data as $meter) {
+        $warga = $meter->user->warga ?? null;
+
         $tunggakan = $meter->tagihan_bulan_lalu ?? 0;
-        $total = $beban + ($meter->pemakaian * $tarif) + $tunggakan;
+        $total = $beban + ($meter->pemakaian * $tarif) - $tunggakan;
+        $statusText = $meter->status_lunas ? 'Lunas' : 'Belum Lunas';
 
         $sheet->setCellValue("A$row", $no++);
-        $sheet->setCellValue("B$row", $meter->user->username);
-        $sheet->setCellValue("C$row", $meter->user->warga->alamat ?? '-');
-        $sheet->setCellValue("D$row", $bulan);
-        $sheet->setCellValue("E$row", $tahun);
-        $sheet->setCellValue("F$row", $meter->pemakaian);
-        $sheet->setCellValue("G$row", $beban);
-        $sheet->setCellValue("H$row", $tarif);
-        $sheet->setCellValue("I$row", $tunggakan);
-        $sheet->setCellValue("J$row", $total);
+        $sheet->setCellValue("B$row", $warga->nomor_pelanggan ?? '-');
+        $sheet->setCellValue("C$row", $meter->user->username);
+        $sheet->setCellValue("D$row", $warga->formatted_rt_rw ?? '-');
+        $sheet->setCellValue("E$row", $bulan);
+        $sheet->setCellValue("F$row", $tahun);
+        $sheet->setCellValue("G$row", $meter->pemakaian);
+        $sheet->setCellValue("H$row", $beban);
+        $sheet->setCellValue("I$row", $tarif);
+        $sheet->setCellValue("J$row", $tunggakan);
+        $sheet->setCellValue("K$row", $total);
+        $sheet->setCellValue("L$row", $statusText);
 
         $row++;
     }
 
-    foreach (range('A', 'J') as $col) {
+
+    foreach (range('A', 'L') as $col) {
         $sheet->getColumnDimension($col)->setAutoSize(true);
     }
 
@@ -111,7 +119,7 @@ public function notaBulk(Request $request)
         $m->tunggakan = $m->tagihan_bulan_lalu ?? 0;
         $m->total =
             $beban +
-            ($m->pemakaian * $tarif) +
+            ($m->pemakaian * $tarif) -
             $m->tunggakan;
     }
 

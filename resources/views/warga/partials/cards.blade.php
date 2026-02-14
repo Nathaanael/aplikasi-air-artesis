@@ -1,7 +1,13 @@
 @forelse($data as $row)
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
-
+            <div class="text-center mb-2">
+                @if($row->status_lunas)
+                    <span class="badge bg-success">LUNAS</span>
+                @else
+                    <span class="badge bg-danger">BELUM LUNAS</span>
+                @endif
+            </div>
             <div class="text-center mb-3">
                 <h6 class="fw-bold mb-0">AIR BERSIH TIRTA DARUSSALAM</h6>
                 <small>Pongangan Gunungpati</small>

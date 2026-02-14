@@ -1,6 +1,13 @@
 @forelse($data as $row)
 <div class="card mb-4 shadow-sm">
     <div class="card-body">
+        <div class="text-center mb-2">
+            @if($row->status_lunas)
+                <span class="badge bg-success">LUNAS</span>
+            @else
+                <span class="badge bg-danger">BELUM LUNAS</span>
+            @endif
+        </div>
 
         <div class="text-center mb-3">
             <h6 class="fw-bold mb-0">AIR BERSIH TIRTA DARUSSALAM</h6>
@@ -82,6 +89,7 @@
 
         <!-- ACTION -->
         <div class="d-flex gap-2 mt-3">
+            @if(!$row->status_lunas)
             <button
                 class="btn btn-warning btn-sm"
                 data-id="{{ $row->id }}"
@@ -96,7 +104,9 @@
             >
                 Edit
             </button>
+            @endif
 
+            @if(!$row->status_lunas)
             <form action="{{ route('air.destroy', $row->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
@@ -105,6 +115,23 @@
                     Hapus
                 </button>
             </form>
+            @endif
+
+            @if(!$row->status_lunas)
+            <form action="{{ route('air.lunas', $row->id) }}"
+                method="POST"
+                onsubmit="return confirm('Konfirmasi: Status akan diubah menjadi LUNAS dan tidak bisa di-import ulang. Lanjutkan?')">
+                @csrf
+                <input type="hidden" name="bulan" value="{{ $row->bulan }}">
+                <input type="hidden" name="tahun" value="{{ $row->tahun }}">
+
+                <button class="btn btn-success btn-sm">
+                    Tandai Lunas
+                </button>
+            </form>
+            @endif
+
+
         </div>
 
     </div>

@@ -7,9 +7,8 @@
             <div class="col-12 col-md-4">
                 <h6 class="fw-bold text-warning">Informasi Kontak</h6>
                 <small>
-                    Email: unika@unika.ac.id<br>
-                    Hotline: (024) 850 5003<br>
-                    WhatsApp: 08123 2345 479
+                    Email: airbersihtirtadarussalam@gmail.com<br>
+                    WhatsApp: 0856-0183-6045
                 </small>
             </div>
 
@@ -31,6 +30,7 @@
 
                 <div>
                     <small>Powered by</small><br>
+                    <strong>KKN Gasal 2026</strong><br>
                     <strong>Unika Soegijapranata</strong>
                 </div>
             </div>

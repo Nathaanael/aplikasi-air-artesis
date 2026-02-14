@@ -48,9 +48,9 @@
         <div class="card-body p-4">
 
             <div class="text-center mb-3">
-                <img src="{{ asset('images/logo.png') }}"
+                <img src="{{ asset('images/logo_artetis.jpeg') }}"
                     alt="Logo Unika"
-                    style="height:80px; object-fit:contain;">
+                    style="height:150px; object-fit:contain;">
             </div>
 
             <h4 class="text-center mb-4 login-title">

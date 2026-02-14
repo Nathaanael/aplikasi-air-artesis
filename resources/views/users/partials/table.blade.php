@@ -3,7 +3,7 @@
         <table class="table table-striped mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>#</th>
+                    <th>No Pelanggan</th>
                     <th>Username</th>
                     <th>Nama</th>
                     <th>RT/RW</th>
@@ -14,13 +14,11 @@
             <tbody>
                 @forelse($users as $index => $user)
                     <tr>
-                        {{-- ✅ nomor urut benar saat pagination --}}
-                        <td>{{ $users->firstItem() + $index }}</td>
-
+                        <td>{{ $user->warga->nomor_pelanggan ?? '-' }}</td>
                         <td>{{ $user->username }}</td>
                         <td>{{ $user->warga->nama ?? '-' }}</td>
                         <td>{{ $user->warga->rt ?? '-' }}/{{ $user->warga->rw ?? '-' }}</td>
-                        <td>{{ $user->warga->alamat ?? '-' }}</td>
+                        <td>{{ $user->warga->formatted_rt_rw ?? '-' }}</td>
 
                         <td>
                             <button type="button" class="btn btn-sm btn-warning"

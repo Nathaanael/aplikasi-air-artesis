@@ -10,6 +10,16 @@
 <body class="bg-light d-flex flex-column min-vh-100">
     
 <main class="flex-fill">
+    @if(session('failed_rows'))
+    <div class="alert alert-danger">
+        <ul>
+            @foreach(session('failed_rows') as $f)
+                <li>{{ $f }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show">
             {{ session('success') }}
@@ -95,7 +105,10 @@
     <button id="btnExportPdf" class="btn btn-danger btn-sm mb-3">
         Export Semua Nota
     </button>
-
+    <a href="{{ route('meter.import.form') }}"
+        class="btn btn-secondary btn-sm mb-3">
+        Import Excel
+    </a>
 
 
 </div>

@@ -50,7 +50,7 @@
 
           <!-- Hutang Lalu -->
           <div class="mb-3">
-            <label>Hutang Lalu</label>
+            <label>Tagihan Bulan Lalu</label>
             <input type="number" id="editTagihan" name="tagihan_bulan_lalu" class="form-control">
           </div>
         </div>

@@ -102,11 +102,13 @@
                 <div class="mb-3">
                     <label class="form-label">Tagihan Bulan Lalu (Opsional)</label>
                     <input
-                        type="number"
+                        type="text"
+                        id="tagihanField"
                         name="tagihan_bulan_lalu"
                         class="form-control"
-                        placeholder="Jika ada hutang"
                     >
+
+
                 </div>
 
                 <button class="btn btn-primary w-100">
@@ -123,6 +125,9 @@
 <script>
     const userSelect = document.getElementById('userSelect');
     const rtRwField = document.getElementById('rtRwField');
+    const bulanSelect = document.getElementById('bulanSelect');
+    const tahunSelect = document.getElementById('tahunSelect');
+    const tagihanInput = document.getElementById('tagihanField');
 
     function updateRT() {
         const opt = userSelect.options[userSelect.selectedIndex];
@@ -139,26 +144,40 @@
         const kini = parseInt(this.value || 0);
         document.getElementById('pemakaian').value = Math.max(0, kini - standLama);
     });
-    
+
     async function loadPrevStand() {
-        const user = document.getElementById('userSelect').value;
-        const bulan = document.getElementById('bulanSelect').value;
-        const tahun = document.getElementById('tahunSelect').value;
+        const user = userSelect.value;
+        const bulan = bulanSelect.value;
+        const tahun = tahunSelect.value;
 
         const res = await fetch(`/air/prev-stand?user_id=${user}&bulan=${bulan}&tahun=${tahun}`);
         const data = await res.json();
 
         document.getElementById('standLama').value = data.stand_lama || 0;
+
+        const t = Math.abs(data.tagihan || 0);
+        tagihanInput.value = t === 0 ? '' : '-' + t;
+
+
+        tagihanInput.readOnly = false;
+        tagihanInput.classList.remove('bg-secondary-subtle');
     }
 
     userSelect.addEventListener('change', loadPrevStand);
     bulanSelect.addEventListener('change', loadPrevStand);
     tahunSelect.addEventListener('change', loadPrevStand);
+    document.querySelector('form').addEventListener('submit', function () {
+            const f = document.getElementById('tagihanField');
+            if (f.value) {
+                f.value = f.value.replace(/(?!^-)[^0-9]/g, '');
+            }
 
+    });
     loadPrevStand();
-
+    
 
 </script>
+
 
 </body>
 </html>

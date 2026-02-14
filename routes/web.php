@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MeterAirController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MeterAirExportController;
+use App\Http\Controllers\MeterAirImportController;
 
 Route::get('/', function () {
 
@@ -68,6 +69,12 @@ Route::middleware(['auth','role:admin'])->group(function () {
         )->name('air.export.nota.bulk');
 
     Route::get('/air/prev-stand', [MeterAirController::class, 'getPrevStand']);
+    Route::post('/air/{id}/lunas', [MeterAirController::class, 'setLunas'])
+    ->name('air.lunas');
+    Route::post('/meter-air/import', [MeterAirImportController::class, 'import'])
+    ->name('meter.import');
+    Route::get('/meter/import', [MeterAirImportController::class, 'form'])
+    ->name('meter.import.form');
 });
 
 Route::middleware(['auth','role:warga'])->group(function () {

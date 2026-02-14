@@ -26,6 +26,14 @@
                 </div>
             </div>
             <div class="mb-3">
+                <label class="form-label">Nomor Pelanggan</label>
+                <input type="text"
+                    name="nomor_pelanggan"
+                    class="form-control"
+                    required>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Nama Warga</label>
                 <input type="text" name="nama" class="form-control" required>
             </div>

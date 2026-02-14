@@ -44,7 +44,7 @@
 
                 <div class="col-6">
                     <select id="tahun" name="tahun" class="form-select">
-                        @foreach(range(date('Y')-3, date('Y')+1) as $y)
+                        @foreach(range(date('Y')-1, date('Y')+1) as $y)
                             <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>
                                 {{ $y }}
                             </option>

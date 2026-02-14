@@ -7,10 +7,10 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Warga;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    // Tampilkan form create
     public function create()
     {
         return view('users.create');
@@ -25,57 +25,64 @@ class UserController extends Controller
             'nama' => 'required',
             'rt' => 'required',
             'rw' => 'required',
-            'alamat' => 'required'
+            'alamat' => 'required',
+            'nomor_pelanggan' => 'required'
         ]);
 
-        $user = User::create([
-            'username' => $r->username,
-            'password' => Hash::make($r->password),
-            'role' => 'warga',
-        ]);
-        $last = Warga::orderBy('id', 'desc')->first();
-        $lastNumber = $last ? (int)$last->nomor_pelanggan : 0;
-        $nomorPelanggan = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        DB::transaction(function () use ($r) {
 
-        Warga::create([
-            'user_id' => $user->id,
-            'nama' => $r->nama,
-            'rt' => $r->rt,
-            'rw' => $r->rw,
-            'alamat' => $r->alamat,
-            'nomor_pelanggan' => $nomorPelanggan,
-        ]);
+            $user = User::create([
+                'username' => $r->username,
+                'password' => Hash::make($r->password),
+                'role' => 'warga',
+            ]);
 
+            Warga::insertWithShift(
+                (int)$r->nomor_pelanggan,
+                [
+                    'user_id' => $user->id,
+                    'nama' => $r->nama,
+                    'rt' => $r->rt,
+                    'rw' => $r->rw,
+                    'alamat' => $r->alamat,
+                ]
+            );
+        });
 
-        return redirect()->route('users.index')->with('success','User berhasil dibuat');
+        return back()->with('success','User dibuat + nomor disisipkan');
     }
+
+
 
     // Tampilkan daftar user warga
     public function index(Request $request)
     {
         $q = $request->q;
 
-        $users = User::where('role', 'warga')
-            ->where('role', 'warga')
-                ->where(function ($query) use ($q) {
-                    $query->where('username', 'like', "%$q%")
-                        ->orWhereHas('warga', function ($w) use ($q) {
-                            $w->where('nama', 'like', "%$q%")
-                                ->orWhere('alamat', 'like', "%$q%");
-                        });
-                })
+        $users = User::query()
+            ->select('users.*')
+            ->join('warga', 'warga.user_id', '=', 'users.id')
+            ->where('users.role', 'warga')
 
-            ->orderBy('username')
+            ->when($q, function ($query) use ($q) {
+                $query->where(function ($sub) use ($q) {
+                    $sub->where('users.username', 'like', "%$q%")
+                        ->orWhere('warga.nama', 'like', "%$q%")
+                        ->orWhere('warga.alamat', 'like', "%$q%");
+                });
+            })
+
+            ->orderByRaw('CAST(warga.nomor_pelanggan AS UNSIGNED)')
             ->paginate(10)
             ->withQueryString();
 
-        // 👉 kalau AJAX → hanya render tabel
         if ($request->ajax()) {
             return view('users.partials.table', compact('users'))->render();
         }
 
-        return view('users.index', compact('users', 'q'));
+        return view('users.index', compact('users','q'));
     }
+
 
 
     // Tampilkan form edit user
@@ -93,7 +100,8 @@ class UserController extends Controller
             'nama' => 'required',
             'rt' => 'required',
             'rw' => 'required',
-            'alamat' => 'required'
+            'alamat' => 'required',
+            'nomor_pelanggan' => 'required|unique:warga,nomor_pelanggan,'.$user->warga->id,
         ]);
 
         $user->update([
@@ -107,6 +115,7 @@ class UserController extends Controller
             'rt' => $r->rt,
             'rw' => $r->rw,
             'alamat' => $r->alamat,
+            'nomor_pelanggan' => $r->nomor_pelanggan,
         ]);
 
         return redirect()->route('users.index')->with('success','User berhasil diupdate');
@@ -115,9 +124,13 @@ class UserController extends Controller
     // Hapus user
     public function destroy(User $user)
     {
+        $user->warga->deleteWithShift();
         $user->delete();
-        return redirect()->route('users.index')->with('success','User berhasil dihapus');
+
+        return back()->with('success','User dihapus + nomor dirapatkan');
     }
+
+
     public function resetPassword(Request $request, User $user)
     {
         $request->validate([
