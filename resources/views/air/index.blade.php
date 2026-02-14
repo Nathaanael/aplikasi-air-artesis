@@ -3,12 +3,13 @@
 <head>
     <title>Data Air</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-light d-flex flex-column min-vh-100">
-    
+    @include('partials.navbar')
 <main class="flex-fill">
     @if(session('failed_rows'))
     <div class="alert alert-danger">
@@ -29,28 +30,28 @@
 
 <div class="container py-3">
 
-    <div class="d-flex justify-content-between mb-3 align-items-center">
-    <h5 class="mb-0">
-            Daftar Meter Air —
-            <span class="text-primary">
-                {{ auth()->user()->username }}
-            </span>
-        </h5>
+    <!-- <div class="d-flex justify-content-between mb-3 align-items-center">
+        <h5 class="mb-0">
+                Daftar Meter Air —
+                <span class="text-primary">
+                    {{ auth()->user()->username }}
+                </span>
+            </h5>
 
-    <div class="d-flex gap-2">
-        <a href="{{ route('air.create') }}" class="btn btn-sm btn-primary">
-            + Tambah Data
-        </a>
-        <a href="{{ route('users.index') }}" class="btn btn-sm btn-primary">
-            Lihat User
-        </a>
+        <div class="d-flex gap-2">
+            <a href="{{ route('air.create') }}" class="btn btn-sm btn-primary">
+                + Tambah Data
+            </a>
+            <a href="{{ route('users.index') }}" class="btn btn-sm btn-primary">
+                Lihat User
+            </a>
 
-        <form method="POST" action="/logout">
-            @csrf
-            <button class="btn btn-sm btn-danger">Logout</button>
-        </form>
-    </div>
-</div>
+            <form method="POST" action="/logout">
+                @csrf
+                <button class="btn btn-sm btn-danger">Logout</button>
+            </form>
+        </div>
+    </div> -->
 
 
     <!-- FILTER -->

@@ -7,7 +7,7 @@
 </head>
 
 <body class="bg-light d-flex flex-column min-vh-100">
-
+@include('partials.navbar')
 <main class="flex-fill">
 <div class="container py-3">
 
@@ -21,10 +21,10 @@
         </h5>
 
 
-        <form method="POST" action="{{ route('logout') }}">
+        <!-- <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button class="btn btn-sm btn-danger">Logout</button>
-        </form>
+        </form> -->
     </div>
 
     <!-- FILTER -->
